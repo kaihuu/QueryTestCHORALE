@@ -169,6 +169,25 @@ namespace SensorLogInserterRe.Utils
             return table;
         }
 
+        public static DataTable GetLatencyTestTable(DataTable table)
+        {
+            table.Columns.Add(new DataColumn(LatencyTestDao.ColumnTestId, typeof(int)));
+            table.Columns.Add(new DataColumn(LatencyTestDao.ColumnStartTime, typeof(DateTime)));
+            table.Columns.Add(new DataColumn(LatencyTestDao.ColumnEndTime, typeof(DateTime)));
+            table.Columns.Add(new DataColumn(LatencyTestDao.ColumnParallel, typeof(int)));
+            table.Columns.Add(new DataColumn(LatencyTestDao.ColumnSize, typeof(int)));
+            table.Columns.Add(new DataColumn(LatencyTestDao.ColumnDescription, typeof(string)));
 
+            return table;
+        }
+        public static DataTable GetLatencyTesttimeTable(DataTable table)
+        {
+            table.Columns.Add(new DataColumn(LatencyTesttimeDao.ColumnTestId, typeof(int)));
+            table.Columns.Add(new DataColumn(LatencyTesttimeDao.ColumnParallelNum, typeof(int)));
+            table.Columns.Add(new DataColumn(LatencyTesttimeDao.ColumnSizeNum, typeof(int)));
+            table.Columns.Add(new DataColumn(LatencyTesttimeDao.ColumnLatency, typeof(TimeSpan)));
+
+            return table;
+        }
     }
 }

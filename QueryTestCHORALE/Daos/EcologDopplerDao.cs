@@ -49,7 +49,7 @@ namespace SensorLogInserterRe.Daos
 
         public static void Insert(DataTable dataTable)
         {
-            DatabaseAccesser.Insert(EcologDopplerDao.TableName, dataTable);
+            DatabaseAccesser.Insert(TableName, dataTable);
         }
 
         public static DataTable Get()
@@ -70,13 +70,5 @@ namespace SensorLogInserterRe.Daos
             return DatabaseAccesser.GetResult(query.ToString());
         }
 
-        public static DataTable GetCHORALE(int SemanticLinkID, int DriverID)
-        {
-            StringBuilder query = new StringBuilder();
-            query.AppendLine($"SELECT *");
-            query.AppendLine($"FROM " + TableName);
-
-            return DatabaseAccesser.GetResult(query.ToString());
-        }
     }
 }

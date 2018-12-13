@@ -44,6 +44,8 @@
   <ItemGroup>
     <Compile Include="Daos\DatabaseAccesser.cs" />
     <Compile Include="Daos\EcologDopplerDao.cs" />
+    <Compile Include="Daos\LatencyTestDao.cs" />
+    <Compile Include="Daos\LatencyTesttimeDao.cs" />
     <Compile Include="Utils\DataTableUtil.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
