@@ -14,11 +14,9 @@ namespace QueryTestCHORALE
     {
 
         volatile static bool _keyReaded = false;
-        static DataTable LatencyTesttimeTable = new DataTable();
-
+        static DataTable LatencyTesttimeTable;
         static void Main(string[] args)
         {
-            LatencyTesttimeTable = DataTableUtil.GetLatencyTesttimeTable(LatencyTesttimeTable);
             ExecuteTest();
             Console.WriteLine("If Press Any Key, This program will be closed.");
             Console.ReadKey(true);
@@ -45,9 +43,12 @@ namespace QueryTestCHORALE
         async static void ExecuteMethod(int n, int size, int testId)
         {
             ThreadPool.QueueUserWorkItem(new WaitCallback(MyHandler), null);
+            LatencyTesttimeTable = new DataTable();
+            LatencyTesttimeTable = DataTableUtil.GetLatencyTesttimeTable(LatencyTesttimeTable);
 
             for (int t = 0; t < size; t++)
             {
+
                 if (_keyReaded)
                 {
                     Console.WriteLine("キーが押されました");
