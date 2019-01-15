@@ -17,6 +17,7 @@ namespace SensorLogInserterRe.Daos
 
         public static void Insert(DataTable dataTable)
         {
+            
             DatabaseAccesser.Insert(TableName, dataTable);
             Console.WriteLine("Insert is Finished: " + TableName);
         }

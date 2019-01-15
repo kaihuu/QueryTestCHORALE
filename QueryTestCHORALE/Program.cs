@@ -14,17 +14,16 @@ namespace QueryTestCHORALE
     {
 
         volatile static bool _keyReaded = false;
-        static DataTable LatencyTesttimeTable;
+        //static DataTable LatencyTesttimeTable;
         static void Main(string[] args)
         {
-            ExecuteTest();
             Console.WriteLine("If Press Any Key, This program will be closed.");
-            Console.ReadKey(true);
+            ExecuteTest(Convert.ToInt32(args[0]), Convert.ToInt32(args[1]));
+            //ExecuteTest(6, 1000);
+            //Console.ReadKey(true);
         }
-       　static void ExecuteTest()
+       　static void ExecuteTest(int parallel, int size)
         {
-            int parallel = 5;
-            int size = 1000;
             DataTable LatencyTestTable = new DataTable();
             LatencyTestTable = DataTableUtil.GetLatencyTestTable(LatencyTestTable);
             DataRow dataRow = LatencyTestTable.NewRow();
@@ -32,7 +31,7 @@ namespace QueryTestCHORALE
             Console.WriteLine(dataRow.Field<DateTime>(LatencyTestDao.ColumnStartTime));
             dataRow.SetField(LatencyTestDao.ColumnParallel, parallel);
             dataRow.SetField(LatencyTestDao.ColumnSize, size);
-            dataRow.SetField(LatencyTestDao.ColumnDescription, "CHORALEクエリTestVer2");
+            dataRow.SetField(LatencyTestDao.ColumnDescription, "CHORALEクエリTestVer2.3");
             LatencyTestTable.Rows.Add(dataRow);
             LatencyTestDao.Insert(LatencyTestTable);
 
@@ -40,15 +39,17 @@ namespace QueryTestCHORALE
             
         }
 
-        async static void ExecuteMethod(int n, int size, int testId)
+        static void ExecuteMethod(int n, int size, int testId)
         {
             ThreadPool.QueueUserWorkItem(new WaitCallback(MyHandler), null);
-            LatencyTesttimeTable = new DataTable();
-            LatencyTesttimeTable = DataTableUtil.GetLatencyTesttimeTable(LatencyTesttimeTable);
+            //LatencyTesttimeTable = new DataTable();
+            //LatencyTesttimeTable = DataTableUtil.GetLatencyTesttimeTable(LatencyTesttimeTable);
 
             for (int t = 0; t < size; t++)
             {
-
+                DataTable LatencyTesttimeTable;
+                LatencyTesttimeTable = new DataTable();
+                LatencyTesttimeTable = DataTableUtil.GetLatencyTesttimeTable(LatencyTesttimeTable);
                 if (_keyReaded)
                 {
                     Console.WriteLine("キーが押されました");
@@ -57,23 +58,36 @@ namespace QueryTestCHORALE
 
                 var semanticLinkList = getSemanticLinkList();
 
-                List<Task> arrayTask = new List<Task>();
+                //List<Task> arrayTask = new List<Task>();
 
-                for (int i = 0; i < n; i++)
+                //for (int i = 0; i < n; i++)
+                //{
+                //    int index = getRandomIndex(arrayTask.Count);
+                //    var task = Task.Run(() => ExecuteCHORALEQuery(semanticLinkList[index].Item1, 
+                //        semanticLinkList[index].Item2, i, t, testId, ref LatencyTesttimeTable));
+                //    arrayTask.Add(task);
+                //}
+                Parallel.For(0, n, i =>
                 {
-                    int index = getRandomIndex(arrayTask.Count);
-                    var task = Task.Run(() => ExecuteCHORALEQuery(semanticLinkList[index].Item1, 
-                        semanticLinkList[index].Item2, i, t, testId));
-                    arrayTask.Add(task);
-                }
+                    int index = getRandomIndex(semanticLinkList.Count);
+                    //var task = Task.Run(() => ExecuteCHORALEQuery(semanticLinkList[index].Item1, 
+                    //semanticLinkList[index].Item2, i, t, testId, ref LatencyTesttimeTable));
+                    ExecuteCHORALEQuery(semanticLinkList[index].Item1,
+                    semanticLinkList[index].Item2, i, t, testId, ref LatencyTesttimeTable);
+                    //arrayTask.Add(task);
 
-                await Task.WhenAll(arrayTask);
+                });
 
-                
+
+                //await Task.WhenAll(arrayTask);
+                //Console.WriteLine("before:" + LatencyTesttimeTable.Rows.Count);
+                //Console.WriteLine(LatencyTesttimeTable.Rows[0].Field<int>(LatencyTesttimeDao.ColumnParallelNum));
+                //Console.WriteLine(LatencyTesttimeTable.Rows[1].Field<int>(LatencyTesttimeDao.ColumnParallelNum));
+                LatencyTesttimeDao.Insert(LatencyTesttimeTable);
 
             }
             Console.WriteLine("end.");
-            LatencyTesttimeDao.Insert(LatencyTesttimeTable);
+            
             LatencyTestDao.UpdateEndtime(DateTime.Now, testId);
         }
         static List<Tuple<int, string>> getSemanticLinkList()
@@ -130,7 +144,7 @@ namespace QueryTestCHORALE
 
         }
 
-        static void ExecuteCHORALEQuery(int semanticLinkID, string tripDirection, int parallel, int size, int testid)
+        static void ExecuteCHORALEQuery(int semanticLinkID, string tripDirection, int parallel, int size, int testid, ref DataTable LatencyTesttimeTable)
         {
             string query = "SELECT COUNT(*), SUM(LOST_ENERGY)"+
             "FROM ECOLOG_Doppler_NotMM, SEMANTIC_LINKS" +

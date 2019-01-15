@@ -82,11 +82,12 @@ namespace SensorLogInserterRe.Daos
                 }
                 catch (SqlException sqlException)
                 {
-                    if (sqlException.Number != NumberOfViolationOfPrimaryKey)
-                    {
-                        Console.WriteLine($"ERROR: {sqlException.Message}, {sqlException.StackTrace}");
-                        LogWritter.WriteLog(LogWritter.LogMode.Error, $"ERROR: {sqlException.Message}, {sqlException.StackTrace}");
-                    }
+                    //if (sqlException.Number != NumberOfViolationOfPrimaryKey)
+                    //{
+                    //    Console.WriteLine($"ERROR: {sqlException.Message}, {sqlException.StackTrace}");
+                    //    LogWritter.WriteLog(LogWritter.LogMode.Error, $"ERROR: {sqlException.Message}, {sqlException.StackTrace}");
+                    //}
+                    Console.WriteLine($"ERROR: {sqlException.Message}, {sqlException.StackTrace}");
                 }
                 finally
                 {
@@ -108,11 +109,13 @@ namespace SensorLogInserterRe.Daos
                 }
                 catch (SqlException sqlException)
                 {
-                    if (sqlException.Number != NumberOfViolationOfPrimaryKey)
-                    {
+                    //if (sqlException.Number != NumberOfViolationOfPrimaryKey)
+                    //{
+                    //    Console.WriteLine($"ERROR: {sqlException.Message}, {sqlException.StackTrace}");
+                    //    LogWritter.WriteLog(LogWritter.LogMode.Error, $"ERROR: {sqlException.Message}, {sqlException.StackTrace}");
+                    //}
+
                         Console.WriteLine($"ERROR: {sqlException.Message}, {sqlException.StackTrace}");
-                        LogWritter.WriteLog(LogWritter.LogMode.Error, $"ERROR: {sqlException.Message}, {sqlException.StackTrace}");
-                    }
                 }
                 finally
                 {
